@@ -1,6 +1,6 @@
 import axios from "axios";
 const instance = axios.create({
-  baseURL: 'http://192.168.1.222:93',
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeout: 3000,
 });
 // 添加请求拦截器
