@@ -13,8 +13,9 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  server: {
-    host: '0.0.0.0', // 监听所有 IP
-    port: 5173,       // 自定义端口（可选）
-  }
+  // server: {
+  //   host: '0.0.0.0', // 监听所有 IP
+  //   port: 5173,       // 自定义端口（可选）
+  // }
 })
+

@@ -6,11 +6,19 @@ import { getClassApi, getProductListApi } from './apis/home'
 import { ref } from 'vue'
 const classList = ref([])
 const class_mark = ref(1)
+const class_id = ref()
 const total = ref(0)
 const getClass = async () => {
   const res = await getClassApi()
   if (res.code === 200) {
     classList.value = res.data.list
+    classList.value.unshift(
+      {
+        "id": 0,
+        "name": "全部",
+        "name_en": "All"
+      },
+    )
   }
 }
 getClass()
@@ -20,7 +28,7 @@ const selectMark = (id) => {
 const product_list = ref([])
 const searchFilter = ref({
   page: 1,
-  limit: 30,
+  limit: 9,
   class_id: 1,
   search: ''
 })
@@ -45,7 +53,7 @@ const searchProduct = () => {
 const clearGetProduct = async () => {
   searchFilter.value = {
     page: 1,
-    limit: 30,
+    limit: 9,
     class_id: 1,
     search: ''
   }
@@ -71,6 +79,12 @@ const changeLanguage = (val) => {
   flage.value = val
   localStorage.setItem('lang', val)
 }
+const selectChange = (id) => {
+  searchFilter.value.class_id = id
+  getProductList()
+}
+console.log(import.meta.env);
+
 </script>
 
 <template>
@@ -78,8 +92,16 @@ const changeLanguage = (val) => {
     <div class="logo">
       <img src="./assets/logo.png" alt="logo">
       <div class="change_language">
-        <el-button @click="changeLanguage('zh')" type="text">CH</el-button>
-        <el-button @click="changeLanguage('en')" type="text">EN</el-button>
+        <div class="top">
+          <el-button @click="changeLanguage('zh')" type="text">CH</el-button>
+          <el-button @click="changeLanguage('en')" type="text">EN</el-button>
+        </div>
+        <div class="bomt">
+          <el-link href="https://www.dideu.com/h-col-114.html" target="_blank">{{ $t('search.link') }}</el-link>
+        </div>
+
+
+        <!-- <a href="https://www.dideu.com/h-col-114.html" style="font-size: 16px;padding-left: 10px;box-sizing: border-box;">官网</a> -->
       </div>
     </div>
 
@@ -95,9 +117,21 @@ const changeLanguage = (val) => {
       <div class="product_class_item">
         <div class="item_title" v-for="(item, index) in classList" :key="index"
           @click="selectMark(changeClass(item.id))" :class="{ active: class_mark === item.id }">
+
           <p v-if="flage === 'zh'">{{ item.name }}</p>
           <p v-if="flage === 'en'">{{ item.name_en }}</p>
         </div>
+        <div class="mobile_page">
+          <el-select v-model="class_id" placeholder="全部" size="large" style="width: 240px" v-if="flage === 'zh'"
+            clearable @change="selectChange(class_id)">
+            <el-option v-for="(item, index) in classList" :key="index" :label="item.name" :value="item.id" />
+          </el-select>
+          <el-select v-model="class_id" placeholder="All" size="large" style="width: 240px" v-if="flage === 'en'"
+            clearable @change="selectChange(class_id)" >
+            <el-option v-for="(item, index) in classList" :key="index" :label="item.name_en" :value="item.id" />
+          </el-select>
+        </div>
+
       </div>
 
     </div>
@@ -107,17 +141,20 @@ const changeLanguage = (val) => {
           <h5>{{ item.name }}</h5>
           <p>Name: <span>{{ item.name_en }}</span></p>
           <p>CAS: <span>{{ item.cas }}</span></p>
+          <p>分类: <span>{{ item.class_name }}</span></p>
         </template>
         <template v-if="flage === 'en'">
           <h5>{{ item.name_en }}</h5>
-          <p>Name: <span>{{ item.name_en }}</span></p>
+          <!-- <p>Name: <span>{{ item.name_en }}</span></p> -->
           <p>CAS: <span>{{ item.cas }}</span></p>
+          <p>Class: <span>{{ item.class_name }}</span></p>
         </template>
       </div>
     </div>
-    <el-pagination :page-sizes="[30, 60, 120, 240]" v-model:page-size="searchFilter.limit" :disabled="disabled"
-      :background="background" layout="sizes, prev, pager, next" :total="total" @size-change="handleSizeChange"
+    <el-pagination v-model:page-size="searchFilter.limit" :disabled="disabled" :background="background"
+      layout=" prev, pager, next" :total="total" @size-change="handleSizeChange"
       @current-change="handleCurrentChange" />
+
     <div class="footer_nav">
       <p>Copyright © 2025 陕西缔都医药化工</p>
     </div>
@@ -125,6 +162,7 @@ const changeLanguage = (val) => {
 </template>
 
 <style scoped lang="less">
+
 .home {
   .logo {
     display: flex;
@@ -143,6 +181,27 @@ const changeLanguage = (val) => {
     img {
       width: 150px;
       height: 100%;
+    }
+
+    .change_language {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+
+      .bomt {
+        height: 30px;
+        padding: 0 10px;
+        background-color: #1E50AE;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 15px;
+
+        .el-link {
+          font-size: 12px;
+          color: #ffffff;
+        }
+      }
     }
   }
 
@@ -173,7 +232,6 @@ const changeLanguage = (val) => {
     margin-top: 20px;
 
     .product_class_item {
-
       display: flex;
       justify-content: center;
       gap: 20px;
@@ -191,6 +249,12 @@ const changeLanguage = (val) => {
           font-size: 18px;
           font-weight: 700;
         }
+      }
+
+      .mobile_page {
+        display: none;
+
+  
       }
 
       .active {
@@ -213,7 +277,7 @@ const changeLanguage = (val) => {
       padding: 10px;
       box-sizing: border-box;
       // width: 350px;
-      height: 160px;
+      height: 200px;
       border: 1px solid #ccc;
       line-height: 35px;
 
@@ -245,19 +309,28 @@ const changeLanguage = (val) => {
 
   @media (max-width: 520px) {
     .logo {
-      justify-content: center;
+      justify-content: space-between;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .product_class {
       .product_class_item {
         gap: 2px;
+
         .item_title {
           padding: 0 5px;
-          p{
+          display: none;
+
+          p {
             font-size: 13px;
             font-weight: 400;
-          //  line-height: 30px;
+            //  line-height: 30px;
           }
+        }
+
+        .mobile_page {
+          display: block;
         }
       }
     }
@@ -273,5 +346,23 @@ const changeLanguage = (val) => {
       padding: 20px 10px;
     }
   }
+
+  // @media(max-width:440px) {
+  //   .product_class {
+  //     .product_class_item {
+  //       gap: 2px;
+
+  //       .item_title {
+  //         padding: 0 5px;
+
+  //         p {
+  //           font-size: 13px;
+  //           font-weight: 400;
+  //            line-height: 15px;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
 </style>

@@ -1,5 +1,6 @@
 {
     "search":{
-        "search_message":"Enter the product name /CAS search"
+        "search_message":"Enter the product name /CAS search",
+         "link":"Visit website"
     }
 }

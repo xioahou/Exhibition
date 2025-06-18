@@ -1,5 +1,6 @@
 {
     "search":{
-        "search_message":"输入产品名称/CAS搜索"
+        "search_message":"输入产品名称/CAS搜索",
+        "link":"访问官网"
     }
 }
