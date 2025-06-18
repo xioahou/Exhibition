@@ -1,63 +1,75 @@
 <script setup>
+
+
 import { Search } from '@element-plus/icons-vue'
-import {getClassApi,getProductListApi} from './apis/home'
-import {ref} from 'vue'
-const classList=ref([])
-const class_mark=ref(1)
-const total=ref(0)
-const getClass=async()=>{
-const res=await getClassApi()
-if(res.code===200){
-  classList.value=res.data.list
-}
+import { getClassApi, getProductListApi } from './apis/home'
+import { ref } from 'vue'
+const classList = ref([])
+const class_mark = ref(1)
+const total = ref(0)
+const getClass = async () => {
+  const res = await getClassApi()
+  if (res.code === 200) {
+    classList.value = res.data.list
+  }
 }
 getClass()
-const selectMark=(id)=>{
+const selectMark = (id) => {
 
 }
-const product_list=ref([])
-const searchFilter=ref({
-  page:1,
-  limit:30,
-  class_id:1,
-  search:''
+const product_list = ref([])
+const searchFilter = ref({
+  page: 1,
+  limit: 30,
+  class_id: 1,
+  search: ''
 })
-const changeClass=async(id)=>{
-searchFilter.value.class_id=id
-  class_mark.value=id
+const changeClass = async (id) => {
+  searchFilter.value.class_id = id
+  class_mark.value = id
 
-await getProductList()
+  await getProductList()
 }
-const getProductList=async()=>{
-const res=  await getProductListApi(searchFilter.value)
-if(res.code===200){
-  product_list.value=res.data.list
-  total.value=res.data.total
-}
+const getProductList = async () => {
+  const res = await getProductListApi(searchFilter.value)
+  if (res.code === 200) {
+    product_list.value = res.data.list
+    total.value = res.data.total
+  }
 
 }
 getProductList()
-const searchProduct=()=>{
+const searchProduct = () => {
   getProductList()
 }
-const clearGetProduct=async ()=>{
-  searchFilter.value={
-    page:1,
-  limit:30,
-  class_id:1,
-  search:''
+const clearGetProduct = async () => {
+  searchFilter.value = {
+    page: 1,
+    limit: 30,
+    class_id: 1,
+    search: ''
   }
   await getProductList()
 }
-const handleSizeChange=async (val)=>{
-searchFilter.value.limit=val
-await getProductList()
+const handleSizeChange = async (val) => {
+  searchFilter.value.limit = val
+  await getProductList()
 
 }
 //改变页码
-const handleCurrentChange=async (val)=>{
-searchFilter.value.page=val
-await getProductList()
+const handleCurrentChange = async (val) => {
+  searchFilter.value.page = val
+  await getProductList()
+}
+
+import { useI18n } from 'vue-i18n'
+
+const { locale } = useI18n()
+const flage = ref('zh')
+const changeLanguage = (val) => {
+  locale.value = val;
+  flage.value = val
+  localStorage.setItem('lang', val)
 }
 </script>
 
@@ -65,39 +77,47 @@ await getProductList()
   <div class="home">
     <div class="logo">
       <img src="./assets/logo.png" alt="logo">
+      <div class="change_language">
+        <el-button @click="changeLanguage('zh')" type="text">CH</el-button>
+        <el-button @click="changeLanguage('en')" type="text">EN</el-button>
+      </div>
     </div>
+
     <div class="search">
-      <el-input v-model="searchFilter.search" :placeholder="$t('search.search_message')" clearable @clear="clearGetProduct">
+      <el-input v-model="searchFilter.search" :placeholder="$t('search.search_message')" clearable
+        @clear="clearGetProduct">
         <template #append>
-          <el-button :icon="Search" @click="searchProduct"/>
+          <el-button :icon="Search" @click="searchProduct" />
         </template>
       </el-input>
     </div>
     <div class="product_class">
       <div class="product_class_item">
-        <div class="item_title" v-for="(item,index) in classList" :key="index" @click="selectMark(changeClass(item.id))" :class="{active:class_mark===item.id  }">
-          <p>{{ item.name }}</p>
+        <div class="item_title" v-for="(item, index) in classList" :key="index"
+          @click="selectMark(changeClass(item.id))" :class="{ active: class_mark === item.id }">
+          <p v-if="flage === 'zh'">{{ item.name }}</p>
+          <p v-if="flage === 'en'">{{ item.name_en }}</p>
         </div>
       </div>
 
     </div>
     <div class="product_list">
-      <div class="product_list_item" v-for="(item,index) in product_list" :key="index">
-        <h5>{{ item.name }}</h5>
-        <p>Name: <span>{{ item.name_en }}</span></p>
-        <p>CAS: <span>{{ item.cas }}</span></p>
+      <div class="product_list_item" v-for="(item, index) in product_list" :key="index">
+        <template v-if="flage === 'zh'">
+          <h5>{{ item.name }}</h5>
+          <p>Name: <span>{{ item.name_en }}</span></p>
+          <p>CAS: <span>{{ item.cas }}</span></p>
+        </template>
+        <template v-if="flage === 'en'">
+          <h5>{{ item.name_en }}</h5>
+          <p>Name: <span>{{ item.name_en }}</span></p>
+          <p>CAS: <span>{{ item.cas }}</span></p>
+        </template>
       </div>
     </div>
-     <el-pagination
-      :page-sizes="[30, 60, 120, 240]"
-        v-model:page-size="searchFilter.limit"
-      :disabled="disabled"
-      :background="background"
-      layout="sizes, prev, pager, next"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+    <el-pagination :page-sizes="[30, 60, 120, 240]" v-model:page-size="searchFilter.limit" :disabled="disabled"
+      :background="background" layout="sizes, prev, pager, next" :total="total" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" />
     <div class="footer_nav">
       <p>Copyright © 2025 陕西缔都医药化工</p>
     </div>
@@ -108,12 +128,17 @@ await getProductList()
 .home {
   .logo {
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     padding-top: 20px;
     padding-left: 50px;
+    padding-right: 50px;
     box-sizing: border-box;
     width: 100%;
     height: 100px;
+
+    .el-button {
+      font-size: 20px;
+    }
 
     img {
       width: 150px;
@@ -159,7 +184,7 @@ await getProductList()
         line-height: 50px;
         padding: 0 15px;
         box-sizing: border-box;
-cursor: pointer;
+        cursor: pointer;
 
         p {
           margin: 0;
@@ -185,16 +210,28 @@ cursor: pointer;
     grid-column-gap: 20px;
 
     .product_list_item {
-      padding: 20px;
+      padding: 10px;
       box-sizing: border-box;
       // width: 350px;
       height: 160px;
       border: 1px solid #ccc;
+      line-height: 35px;
+
+      h5 {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      p {
+        font-size: 16px;
+      }
     }
   }
-.el-pagination{
-  justify-content: center;
-}
+
+  .el-pagination {
+    justify-content: center;
+  }
+
   .footer_nav {
     margin-top: 100px;
     display: flex;
@@ -214,9 +251,13 @@ cursor: pointer;
     .product_class {
       .product_class_item {
         gap: 2px;
-
         .item_title {
           padding: 0 5px;
+          p{
+            font-size: 13px;
+            font-weight: 400;
+          //  line-height: 30px;
+          }
         }
       }
     }
