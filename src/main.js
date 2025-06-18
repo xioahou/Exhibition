@@ -11,4 +11,4 @@ app.use(ElementPlus, {
   locale: zhCn,
 })
 app.mount('#app')
-console.log(i18n.global.locale.value);
+
