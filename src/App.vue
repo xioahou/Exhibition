@@ -147,14 +147,14 @@ console.log(import.meta.env);
       <div class="product_list_item" v-for="(item, index) in product_list" :key="index">
         <template v-if="flage === 'zh'">
           <h5>{{ item.name }}</h5>
-          <p>Name: <span>{{ item.name_en }}</span></p>
-          <p>CAS: <span>{{ item.cas }}</span></p>
+          <p class="cas">Name: <span>{{ item.name_en }}</span></p>
+          <p >CAS: <span>{{ item.cas }}</span></p>
           <span class="tag">{{ item.class_name }}</span>
         </template>
         <template v-if="flage === 'en'">
           <h5>{{ item.name_en }}</h5>
           <!-- <p>Name: <span>{{ item.name_en }}</span></p> -->
-          <p>CAS: <span>{{ item.cas }}</span></p>
+          <p class="cas">CAS: <span>{{ item.cas }}</span></p>
           <span class="tag">{{ item.class_name_en }}</span>
         </template>
       </div>
@@ -284,7 +284,7 @@ console.log(import.meta.env);
       padding: 10px;
       box-sizing: border-box;
       // width: 350px;
-      height: 200px;
+      // height: 250px;
       border: 1px solid #ccc;
       line-height: 22px;
 
@@ -297,7 +297,14 @@ console.log(import.meta.env);
         border: 1px solid #ccc;
         // background-color: #1E50AE;
       }
-
+      h5{
+        line-height: 20px;
+      }
+.cas{
+  padding-top: 5px;
+  box-sizing: border-box;
+  line-height: 18px;
+}
       h5 {
         font-size: 18px;
         font-weight: 700;
@@ -320,8 +327,8 @@ console.log(import.meta.env);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: black;
-    height: 200px;
+    background-color: #1E50AE;
+    height: 50px;
     width: 100%;
     color: #ffffff;
   }
