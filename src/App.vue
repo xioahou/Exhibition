@@ -73,7 +73,8 @@ const handleCurrentChange = async (val) => {
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
-const flage = ref('zh')
+const language=localStorage.getItem('lang')
+const flage = ref(language)
 const changeLanguage = (val) => {
   locale.value = val;
   flage.value = val
