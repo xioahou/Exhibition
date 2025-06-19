@@ -141,13 +141,13 @@ console.log(import.meta.env);
           <h5>{{ item.name }}</h5>
           <p>Name: <span>{{ item.name_en }}</span></p>
           <p>CAS: <span>{{ item.cas }}</span></p>
-          <p>分类: <span>{{ item.class_name }}</span></p>
+          <span class="tag">{{ item.class_name }}</span>
         </template>
         <template v-if="flage === 'en'">
           <h5>{{ item.name_en }}</h5>
           <!-- <p>Name: <span>{{ item.name_en }}</span></p> -->
           <p>CAS: <span>{{ item.cas }}</span></p>
-          <p>Class: <span>{{ item.class_name }}</span></p>
+          <span class="tag">{{ item.class_name_en }}</span>
         </template>
       </div>
     </div>
@@ -238,8 +238,8 @@ console.log(import.meta.env);
 
       .item_title {
         text-align: center;
-        height: 50px;
-        line-height: 50px;
+        height: 35px;
+        line-height: 35px;
         padding: 0 15px;
         box-sizing: border-box;
         cursor: pointer;
@@ -280,7 +280,15 @@ console.log(import.meta.env);
       height: 200px;
       border: 1px solid #ccc;
       line-height: 35px;
-
+.tag{
+  height: 40px;
+  // width:100px;
+  padding:5px;
+  border-radius:10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  // background-color: #1E50AE;
+}
       h5 {
         font-size: 18px;
         font-weight: 700;
