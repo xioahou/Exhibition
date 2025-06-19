@@ -73,7 +73,7 @@ const handleCurrentChange = async (val) => {
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
-const language=localStorage.getItem('lang')
+const language=localStorage.getItem('lang') || 'zh'
 const flage = ref(language)
 const changeLanguage = (val) => {
   locale.value = val;
@@ -98,7 +98,7 @@ console.log(import.meta.env);
           <el-button @click="changeLanguage('en')" type="text">EN</el-button>
         </div>
         <div class="bomt">
-          <el-link href="https://www.dideu.com/h-col-114.html" target="_blank">{{ $t('search.link') }}</el-link>
+          <el-link href="https://www.dideu.com/" target="_blank">{{ $t('search.link') }}</el-link>
         </div>
 
 
