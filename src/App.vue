@@ -5,7 +5,7 @@ import { Search } from '@element-plus/icons-vue'
 import { getClassApi, getProductListApi } from './apis/home'
 import { ref } from 'vue'
 const classList = ref([])
-const class_mark = ref(1)
+const class_mark = ref(0)
 const class_id = ref()
 const total = ref(0)
 const getClass = async () => {
@@ -29,7 +29,7 @@ const product_list = ref([])
 const searchFilter = ref({
   page: 1,
   limit: 9,
-  class_id: 1,
+  class_id: null,
   search: ''
 })
 const changeClass = async (id) => {
@@ -54,7 +54,7 @@ const clearGetProduct = async () => {
   searchFilter.value = {
     page: 1,
     limit: 9,
-    class_id: 1,
+    class_id: null,
     search: ''
   }
   await getProductList()
@@ -122,13 +122,20 @@ console.log(import.meta.env);
           <p v-if="flage === 'en'">{{ item.name_en }}</p>
         </div>
         <div class="mobile_page">
-          <el-select v-model="class_id" placeholder="全部" size="large" style="width: 240px" v-if="flage === 'zh'"
-            clearable @change="selectChange(class_id)">
-            <el-option v-for="(item, index) in classList" :key="index" :label="item.name" :value="item.id" />
+          <el-select v-model="class_id"  size="large" style="width: 240px" v-if="flage === 'zh'"
+            clearable @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
+            <template  v-for="(item, index) in classList" :key="index">
+               <el-option :label="item.name" :value="item.id"  v-if="item.id>0"/>
+            </template>
+           
           </el-select>
-          <el-select v-model="class_id" placeholder="All" size="large" style="width: 240px" v-if="flage === 'en'"
-            clearable @change="selectChange(class_id)" >
-            <el-option v-for="(item, index) in classList" :key="index" :label="item.name_en" :value="item.id" />
+        
+          <el-select v-model="class_id"  size="large" style="width: 240px" v-if="flage === 'en'"
+            clearable @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
+            <template v-for="(item, index) in classList">
+                 <el-option  :key="index" :label="item.name_en" :value="item.id"  v-if="item.id>0"/>
+            </template>
+         
           </el-select>
         </div>
 
@@ -213,8 +220,8 @@ console.log(import.meta.env);
     // width:400px;
     :deep(.el-input) {
       outline: none;
-      width: 400px;
-      height: 50px;
+      width: 600px;
+      height: 40px;
 
       .el-input-group__append {
         background-color: #1E50AE;
