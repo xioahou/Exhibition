@@ -73,7 +73,7 @@ const handleCurrentChange = async (val) => {
 import { useI18n } from 'vue-i18n'
 
 const { locale } = useI18n()
-const language=localStorage.getItem('lang') || 'zh'
+const language = localStorage.getItem('lang') || 'zh'
 const flage = ref(language)
 const changeLanguage = (val) => {
   locale.value = val;
@@ -123,20 +123,20 @@ console.log(import.meta.env);
           <p v-if="flage === 'en'">{{ item.name_en }}</p>
         </div>
         <div class="mobile_page">
-          <el-select v-model="class_id"  size="large" style="width: 240px" v-if="flage === 'zh'"
-            clearable @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
-            <template  v-for="(item, index) in classList" :key="index">
-               <el-option :label="item.name" :value="item.id"  v-if="item.id>0"/>
+          <el-select v-model="class_id" size="large" style="width: 240px" v-if="flage === 'zh'" clearable
+            @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
+            <template v-for="(item, index) in classList" :key="index">
+              <el-option :label="item.name" :value="item.id" v-if="item.id > 0" />
             </template>
-           
+
           </el-select>
-        
-          <el-select v-model="class_id"  size="large" style="width: 240px" v-if="flage === 'en'"
-            clearable @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
+
+          <el-select v-model="class_id" size="large" style="width: 240px" v-if="flage === 'en'" clearable
+            @change="selectChange(class_id)" :placeholder="$t('search.select_message')">
             <template v-for="(item, index) in classList">
-                 <el-option  :key="index" :label="item.name_en" :value="item.id"  v-if="item.id>0"/>
+              <el-option :key="index" :label="item.name_en" :value="item.id" v-if="item.id > 0" />
             </template>
-         
+
           </el-select>
         </div>
 
@@ -170,7 +170,6 @@ console.log(import.meta.env);
 </template>
 
 <style scoped lang="less">
-
 .home {
   .logo {
     display: flex;
@@ -262,7 +261,7 @@ console.log(import.meta.env);
       .mobile_page {
         display: none;
 
-  
+
       }
 
       .active {
@@ -287,16 +286,18 @@ console.log(import.meta.env);
       // width: 350px;
       height: 200px;
       border: 1px solid #ccc;
-      line-height: 35px;
-.tag{
-  height: 40px;
-  // width:100px;
-  padding:5px;
-  border-radius:10px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  // background-color: #1E50AE;
-}
+      line-height: 22px;
+
+      .tag {
+        height: 40px;
+        // width:100px;
+        padding: 5px;
+        border-radius: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        // background-color: #1E50AE;
+      }
+
       h5 {
         font-size: 18px;
         font-weight: 700;
@@ -313,6 +314,8 @@ console.log(import.meta.env);
   }
 
   .footer_nav {
+    // position: absolute;
+    // bottom: 0;
     margin-top: 100px;
     display: flex;
     justify-content: center;
