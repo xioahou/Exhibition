@@ -68,6 +68,10 @@ const handleSizeChange = async (val) => {
 const handleCurrentChange = async (val) => {
   searchFilter.value.page = val
   await getProductList()
+  window.scrollTo({
+  top: 0,
+  behavior: 'smooth' // 平滑滚动
+});
 }
 
 import { useI18n } from 'vue-i18n'
@@ -148,7 +152,7 @@ console.log(import.meta.env);
         <template v-if="flage === 'zh'">
           <h5>{{ item.name }}</h5>
           <p class="cas">Name: <span>{{ item.name_en }}</span></p>
-          <p >CAS: <span>{{ item.cas }}</span></p>
+          <p>CAS: <span>{{ item.cas }}</span></p>
           <span class="tag">{{ item.class_name }}</span>
         </template>
         <template v-if="flage === 'en'">
@@ -297,14 +301,17 @@ console.log(import.meta.env);
         border: 1px solid #ccc;
         // background-color: #1E50AE;
       }
-      h5{
+
+      h5 {
         line-height: 20px;
       }
-.cas{
-  padding-top: 5px;
-  box-sizing: border-box;
-  line-height: 18px;
-}
+
+      .cas {
+        padding-top: 5px;
+        box-sizing: border-box;
+        line-height: 18px;
+      }
+
       h5 {
         font-size: 18px;
         font-weight: 700;
