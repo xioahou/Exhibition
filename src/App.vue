@@ -150,13 +150,13 @@ console.log(import.meta.env);
     <div class="product_list">
       <div class="product_list_item" v-for="(item, index) in product_list" :key="index">
         <template v-if="flage === 'zh'">
-          <h5>{{ item.name }}</h5>
+          <p class="title">{{ item.name }}</p>
           <p class="cas">Name: <span>{{ item.name_en }}</span></p>
           <p>CAS: <span>{{ item.cas }}</span></p>
           <span class="tag">{{ item.class_name }}</span>
         </template>
         <template v-if="flage === 'en'">
-          <h5>{{ item.name_en }}</h5>
+          <p class="title">{{ item.name_en }}</p>
           <!-- <p>Name: <span>{{ item.name_en }}</span></p> -->
           <p class="cas">CAS: <span>{{ item.cas }}</span></p>
           <span class="tag">{{ item.class_name_en }}</span>
@@ -302,7 +302,7 @@ console.log(import.meta.env);
         // background-color: #1E50AE;
       }
 
-      h5 {
+      .title {
         line-height: 20px;
       }
 
@@ -312,13 +312,13 @@ console.log(import.meta.env);
         line-height: 18px;
       }
 
-      h5 {
-        font-size: 18px;
+      .title {
+        font-size: 16px;
         font-weight: 700;
       }
 
       p {
-        font-size: 16px;
+        font-size: 15px;
       }
     }
   }
@@ -354,7 +354,7 @@ console.log(import.meta.env);
         .item_title {
           padding: 0 5px;
           display: none;
-
+         
           p {
             font-size: 13px;
             font-weight: 400;
@@ -377,6 +377,11 @@ console.log(import.meta.env);
 
     .product_list {
       padding: 20px 10px;
+      .product_list_item{
+        .title{
+          font-size: 15px;
+        }
+      }
     }
   }
 
