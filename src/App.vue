@@ -85,9 +85,13 @@ const changeLanguage = (val) => {
   flage.value = val
   localStorage.setItem('lang', val)
 }
-const selectChange = (id) => {
+const selectChange = async(id) => {
+  console.log('点击分类了',id);
+  
   searchFilter.value.class_id = id
-  getProductList()
+  searchFilter.value.page = 1
+ await getProductList()
+  
 }
 console.log(import.meta.env);
 
