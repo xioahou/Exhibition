@@ -34,6 +34,7 @@ const searchFilter = ref({
 })
 const changeClass = async (id) => {
   searchFilter.value.class_id = id
+  searchFilter.value.page = 1
   class_mark.value = id
 
   await getProductList()
@@ -69,9 +70,9 @@ const handleCurrentChange = async (val) => {
   searchFilter.value.page = val
   await getProductList()
   window.scrollTo({
-  top: 0,
-  behavior: 'smooth' // 平滑滚动
-});
+    top: 0,
+    behavior: 'smooth' // 平滑滚动
+  });
 }
 
 import { useI18n } from 'vue-i18n'
@@ -120,8 +121,8 @@ console.log(import.meta.env);
     </div>
     <div class="product_class">
       <div class="product_class_item">
-        <div class="item_title" v-for="(item, index) in classList" :key="index"
-          @click="selectMark(changeClass(item.id))" :class="{ active: class_mark === item.id }">
+        <div class="item_title" v-for="(item, index) in classList" :key="index" @click="changeClass(item.id)"
+          :class="{ active: class_mark === item.id }">
 
           <p v-if="flage === 'zh'">{{ item.name }}</p>
           <p v-if="flage === 'en'">{{ item.name_en }}</p>
@@ -164,7 +165,7 @@ console.log(import.meta.env);
       </div>
     </div>
     <el-pagination v-model:page-size="searchFilter.limit" :disabled="disabled" :background="background"
-      layout=" prev, pager, next" :total="total" @size-change="handleSizeChange"
+      layout=" prev, pager, next" :total="total" @size-change="handleSizeChange"   v-model:current-page="searchFilter.page"
       @current-change="handleCurrentChange" />
 
     <div class="footer_nav">
@@ -354,7 +355,7 @@ console.log(import.meta.env);
         .item_title {
           padding: 0 5px;
           display: none;
-         
+
           p {
             font-size: 13px;
             font-weight: 400;
@@ -377,8 +378,9 @@ console.log(import.meta.env);
 
     .product_list {
       padding: 20px 10px;
-      .product_list_item{
-        .title{
+
+      .product_list_item {
+        .title {
           font-size: 15px;
         }
       }
