@@ -1,14 +1,16 @@
 import instance from "../utils/request";
-export const getClassApi=()=>{
-    return instance({
-        url:'/Index/classList',
-        method:'get'
-    })
-}
-export const getProductListApi=(data)=>{
-    return instance({
-        url:'/Index/lists',
-        method:'post',
-data
-    })
-}
+//语言列表
+export const getLanguageListApi = () => {
+  return instance({
+    url: "index/languageList",
+  });
+};
+//产品分类
+export const getProductListApi = (lang) => {
+  return instance({
+    url: "index/classList",
+    headers: {
+      lang,
+    },
+  });
+};
