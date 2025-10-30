@@ -1,7 +1,9 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
-import { getLanguageListApi, getProductListApi } from './apis/home'
-import { ref, reactive, onMounted } from 'vue'
+import { getLanguageListApi, getProductListApi, getProductApi } from './apis/home'
+import { ref, reactive, onMounted, toRaw } from 'vue'
+import { setLang, getLang } from './utils/local.js'
+import { ElMessage } from 'element-plus'
 const languageList = ref([])
 async function getLanguageList() {
   const res = await getLanguageListApi()
@@ -13,17 +15,43 @@ async function getLanguageList() {
   }
 
 }
-getLanguageList()
-//点击切换语言
-const currentFlag = ref('https://flagcdn.com/w40/cn.png') //导航栏国旗
-const currentLang = ref('简体中文') //导航栏渲染当前的语言
-const websiteLang = ref('官方网站') //跳转官方网站语言
-const logoTitle = ref('陕西缔都医药化工有限公司') //logo傍边的标题
-const inputText = ref('输入产品名称/CAS搜索')
-const bigTitle = ref('产品服务')//推广大标题
-const smallTitle = ref('我们提供定制合成服务，提供从小试研发、中试放大至产业化生产的一站式服务。')
 
-function changeLang(item) {
+
+getLanguageList()
+const localLang = getLang()
+console.log(localLang);
+const querParams = ref({
+  class_id: 1,
+  search: "",
+  page: 1,
+  limit: 9
+})
+const total = ref(0)
+const input = ref('')
+//点击切换语言
+const language = ref(localLang.short_name || 'zh-Cn') //调用接口传的值区分语言
+const currentFlag = ref(localLang.icon || 'https://flagcdn.com/w40/cn.png') //导航栏国旗
+const currentLang = ref(localLang.display_name || '简体中文') //导航栏渲染当前的语言
+const websiteLang = ref(localLang.jump_website || '官方网站') //跳转官方网站语言
+const logoTitle = ref(localLang.company_name || '陕西缔都医药化工有限公司') //logo傍边的标题
+const inputText = ref(localLang.search_placeholder || '输入产品名称/CAS搜索')
+const bigTitle = ref(localLang.promote_title || '产品服务')//推广大标题
+const smallTitle = ref(localLang.promote_subtitle || '我们提供定制合成服务，提供从小试研发、中试放大至产业化生产的一站式服务。')
+const copyright = ref(localLang.copyright || 'Copyright @ 2025 陕西缔都医药化工')
+const classifyList = ref([])
+async function getProductList(item = 'zh-Cn') {
+  const res = await getProductListApi(item)
+  if (res.code === 200) {
+    classifyList.value = res.data
+
+  } else {
+    ElMessage.error(res.msg)
+  }
+}
+getProductList(language.value)
+async function changeLang(item) {
+  console.log(item);
+  setLang(item)
   currentFlag.value = item.icon
   currentLang.value = item.display_name
   websiteLang.value = item.jump_website
@@ -31,9 +59,38 @@ function changeLang(item) {
   inputText.value = item.search_placeholder
   bigTitle.value = item.promote_title
   smallTitle.value = item.promote_subtitle
+  language.value = item.short_name
+  await getProductList(item.short_name)
+  await classisySearch(querParams.value)
 }
+const current_classify = ref(1)
+const productList = ref([])
+async function classisySearch(item) {
+  console.log(item);
 
-
+  current_classify.value = item.id ? item.id : item.class_id
+  querParams.value.class_id = item.id ? item.id : item.class_id
+  const res = await getProductApi(querParams.value, language.value)
+  if (res.code === 200) {
+    productList.value = res.data.list
+    total.value = res.data.total
+  } else {
+    ElMessage.error(res.msg)
+  }
+}
+classisySearch(querParams.value)
+function onSearchClick() {
+  querParams.value.search = input.value
+  classisySearch(querParams.value)
+}
+async function handleSizeChange(val) {
+  querParams.value.limit = val
+  await classisySearch(querParams.value)
+}
+async function handleCurrentChange(val) {
+  querParams.value.page = val
+  await classisySearch(querParams.value)
+}
 </script>
 
 <template>
@@ -68,7 +125,13 @@ function changeLang(item) {
           <h1>{{ logoTitle }}</h1>
         </div>
         <div class="search">
-          <el-input v-model="input" style="width: 240px" :placeholder="inputText" :suffix-icon="Search" />
+          <el-input v-model="input" style="width: 240px" :placeholder="inputText">
+            <template #suffix>
+              <el-icon @click="onSearchClick" style="cursor: pointer;">
+                <Search />
+              </el-icon>
+            </template>
+          </el-input>
         </div>
       </div>
     </section>
@@ -88,45 +151,28 @@ function changeLang(item) {
       <div class="product_content banxin">
         <div class="product_nav">
           <ul class="nav">
-            <li class="action"><span class="text">全部</span></li>
-            <li><span class="text">all inall inall inall inall inallsdddsdsdds inall inall in</span></li>
-            <li><span class="text">全部</span></li>
-            <li><span class="text">全部</span></li>
-            <li><span class="text">全部</span></li>
+            <li :class="{ action: current_classify === item.id }" v-for="(item, index) in classifyList" :key="index"
+              @click="classisySearch(item)"><span class="text">{{ item.name
+              }}</span>
+            </li>
+
           </ul>
         </div>
         <div class="product_list">
-          <div class="product_item">
-            <h5 class="item_title">Acepromazine Maleate</h5>
-            <div class="classify">Acepromazine Maleate</div>
-            <p class="desc">Acepromazine Maleate</p>
-            <p class="cas">CAS: 146447-26-9</p>
-          </div>
-          <div class="product_item">
-            <h5 class="item_title">N-[顺-4-[4-(N-哌啶甲基) 吡啶-2-氧]-2-丁烯-1-基]邻苯二甲酰亚胺 顺丁烯二酸盐</h5>
-            <div class="classify">Acepromazine Maleate</div>
-            <p class="desc">Acepromazine Maleate</p>
-            <p class="cas">CAS: 146447-26-9</p>
-          </div>
-          <div class="product_item">
-            <h5 class="item_title">Acepromazine Maleate</h5>
-            <div class="classify">Acepromazine Maleate</div>
-            <p class="desc">Acepromazine Maleate</p>
-            <p class="cas">CAS: 146447-26-9</p>
-          </div>
-          <div class="product_item">
-            <h5 class="item_title">N-[顺-4-[4-(N-哌啶甲基) 吡啶-2-氧]-2-丁烯-1-基]邻苯二甲酰亚胺 顺丁烯二酸盐</h5>
-            <div class="classify">Acepromazine Maleate</div>
-            <p class="desc">Acepromazine Maleate</p>
-            <p class="cas">CAS: 146447-26-9</p>
+          <div class="product_item" v-for="(item, index) in productList" :key="index">
+            <h5 class="item_title">{{ item.name }}</h5>
+            <div class="classify">{{ item.class_name }}</div>
+            <p class="desc">{{ item.name_en }}</p>
+            <p class="cas">CAS: {{ item.cas }}</p>
           </div>
         </div>
       </div>
-      <el-pagination background layout="prev, pager, next" :total="1000" />
+      <el-pagination background layout="prev, pager, next" :total="total" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange" />
     </section>
     <section class="dideu_home_copyright">
       <div class="copyright_nav banxin">
-        Copyright @ 2025 陕西缔都医药化工
+        {{ copyright }}
       </div>
     </section>
   </div>
