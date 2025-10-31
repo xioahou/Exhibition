@@ -1,7 +1,7 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
-import { getLanguageListApi, getProductListApi, getProductApi } from './apis/home'
-import { ref, reactive, onMounted, toRaw } from 'vue'
+import { getLanguageListApi, getProductListApi, getProductApi, getOpenPageApi } from './apis/home'
+import { ref } from 'vue'
 import { setLang, getLang } from './utils/local.js'
 import { ElMessage } from 'element-plus'
 const languageList = ref([])
@@ -91,11 +91,19 @@ async function handleCurrentChange(val) {
   querParams.value.page = val
   await classisySearch(querParams.value)
 }
+async function getOpenPage() {
+  const res = await getOpenPageApi()
+  if (res.code !== 200) {
+    console.log(res.msg);
+    return
+  }
+}
+getOpenPage()
 </script>
 
 <template>
   <div class="dideu_home">
-    <section class="dideu_home_langule ">
+    <section class="dideu_home_langule padBanxin">
       <div class="langule_change banxin">
         <div class="flag">
           <img :src="currentFlag" style="width: 20px;height: 13px;" />
@@ -118,7 +126,7 @@ async function handleCurrentChange(val) {
         <a class="web_link" href="https://www.dideu.com/" target="blank">{{ websiteLang }}</a>
       </div>
     </section>
-    <section class="dideu_home_search">
+    <section class="dideu_home_search padBanxin">
       <div class="logo_search banxin">
         <div class="logo">
           <img src="./assets//searchLogo.png" alt="">
@@ -135,7 +143,7 @@ async function handleCurrentChange(val) {
         </div>
       </div>
     </section>
-    <section class="dideu_home_banner">
+    <section class="dideu_home_banner padBanxin">
       <div class="banner banxin">
         <div class="banner_title">
           <div class="title">
@@ -147,7 +155,7 @@ async function handleCurrentChange(val) {
         </div>
       </div>
     </section>
-    <section class="dideu_home_content">
+    <section class="dideu_home_content padBanxin">
       <div class="product_content banxin">
         <div class="product_nav">
           <ul class="nav">
@@ -177,7 +185,6 @@ async function handleCurrentChange(val) {
     </section>
   </div>
 </template>
-
 <style scoped lang="less">
 .dideu_home {
   width: 100%;
@@ -376,15 +383,18 @@ async function handleCurrentChange(val) {
       }
 
       .product_list {
+        width: 100%;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
+        flex-shrink: 0;
 
         .product_item {
           padding: 20px;
           box-sizing: border-box;
           border-radius: 10px;
           width: 300px;
+
           height: 270px;
           background-color: #FFFFFF;
           background-image: url("./assets/group.png");
@@ -486,6 +496,11 @@ async function handleCurrentChange(val) {
 
 .banxin {
   width: 1200px;
+  margin: 0 auto;
+}
 
+.padBanxin {
+  padding: 0 150px;
+  box-sizing: border-box;
 }
 </style>

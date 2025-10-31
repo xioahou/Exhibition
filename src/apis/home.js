@@ -30,3 +30,10 @@ export const getProductApi = (params, lang) => {
     params,
   });
 };
+//打开页面统计
+export const getOpenPageApi = () => {
+  return instance({
+    url: "index/lists",
+    method: "get",
+  });
+};
