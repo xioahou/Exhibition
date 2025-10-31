@@ -74,8 +74,8 @@ const productList = ref([])
 async function classisySearch(item) {
   console.log(item);
 
-  current_classify.value = item.id ? item.id : item.class_id
-  querParams.value.class_id = item.id ? item.id : item.class_id
+  current_classify.value = item.id ?? item.class_id
+  querParams.value.class_id = item.id ?? item.class_id
   const res = await getProductApi(querParams.value, language.value)
   if (res.code === 200) {
     productList.value = res.data.list
