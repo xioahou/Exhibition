@@ -5,6 +5,8 @@ import { ref } from 'vue'
 import { setLang, getLang } from './utils/local.js'
 import { ElMessage } from 'element-plus'
 const languageList = ref([])
+const localLang = getLang()
+console.log(localLang);
 async function getLanguageList() {
   const res = await getLanguageListApi()
   console.log(res);
@@ -13,13 +15,12 @@ async function getLanguageList() {
   } else {
     ElMessage.error(res.msg)
   }
-
+  await changeLang(localLang?.short_name || languageList.value[0]) //根据语言列表来获取第一个语言
 }
 
 
 getLanguageList()
-const localLang = getLang()
-console.log(localLang);
+
 const querParams = ref({
   class_id: 0,
   search: "",
