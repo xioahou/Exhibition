@@ -21,7 +21,7 @@ getLanguageList()
 const localLang = getLang()
 console.log(localLang);
 const querParams = ref({
-  class_id: 1,
+  class_id: 0,
   search: "",
   page: 1,
   limit: 9
@@ -29,21 +29,25 @@ const querParams = ref({
 const total = ref(0)
 const input = ref('')
 //点击切换语言
-const language = ref(localLang.short_name || 'zh-Cn') //调用接口传的值区分语言
-const currentFlag = ref(localLang.icon || 'https://flagcdn.com/w40/cn.png') //导航栏国旗
-const currentLang = ref(localLang.display_name || '简体中文') //导航栏渲染当前的语言
-const websiteLang = ref(localLang.jump_website || '官方网站') //跳转官方网站语言
-const logoTitle = ref(localLang.company_name || '陕西缔都医药化工有限公司') //logo傍边的标题
-const inputText = ref(localLang.search_placeholder || '输入产品名称/CAS搜索')
-const bigTitle = ref(localLang.promote_title || '产品服务')//推广大标题
-const smallTitle = ref(localLang.promote_subtitle || '我们提供定制合成服务，提供从小试研发、中试放大至产业化生产的一站式服务。')
-const copyright = ref(localLang.copyright || 'Copyright @ 2025 陕西缔都医药化工')
+const language = ref(localLang?.short_name || 'zh-Cn') //调用接口传的值区分语言
+const allTiags = ref(localLang?.category_display_name || '全部')
+const currentFlag = ref(localLang?.icon || 'https://flagcdn.com/w40/cn.png') //导航栏国旗
+const currentLang = ref(localLang?.display_name || '简体中文') //导航栏渲染当前的语言
+const websiteLang = ref(localLang?.jump_website || '官方网站') //跳转官方网站语言
+const logoTitle = ref(localLang?.company_name || '陕西缔都医药化工有限公司') //logo傍边的标题
+const inputText = ref(localLang?.search_placeholder || '输入产品名称/CAS搜索')
+const bigTitle = ref(localLang?.promote_title || '产品服务')//推广大标题
+const smallTitle = ref(localLang?.promote_subtitle || '我们提供定制合成服务，提供从小试研发、中试放大至产业化生产的一站式服务。')
+const copyright = ref(localLang?.copyright || 'Copyright @ 2025 陕西缔都医药化工')
 const classifyList = ref([])
 async function getProductList(item = 'zh-Cn') {
   const res = await getProductListApi(item)
   if (res.code === 200) {
     classifyList.value = res.data
-
+    classifyList.value.unshift({
+      id: 0,
+      name: allTiags.value
+    })
   } else {
     ElMessage.error(res.msg)
   }
@@ -60,6 +64,8 @@ async function changeLang(item) {
   bigTitle.value = item.promote_title
   smallTitle.value = item.promote_subtitle
   language.value = item.short_name
+  allTiags.value = item.category_display_name
+  copyright.value = item.copyright
   await getProductList(item.short_name)
   await classisySearch(querParams.value)
 }
