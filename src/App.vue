@@ -15,7 +15,7 @@ async function getLanguageList() {
   } else {
     ElMessage.error(res.msg)
   }
-  await changeLang(localLang?.short_name || languageList.value[0]) //根据语言列表来获取第一个语言
+  await changeLang(localLang || languageList.value[0]) //根据语言列表来获取第一个语言
 }
 
 
@@ -390,6 +390,7 @@ getOpenPage()
       }
 
       .product_list {
+        flex: 1;
         width: 100%;
         display: flex;
         gap: 10px;
@@ -502,12 +503,9 @@ getOpenPage()
 }
 
 .banxin {
-  width: 1200px;
-  margin: 0 auto;
-}
+  max-width: 1200px;
+  width: 100%;
 
-.padBanxin {
-  padding: 0 150px;
-  box-sizing: border-box;
+  margin: 0 auto;
 }
 </style>
