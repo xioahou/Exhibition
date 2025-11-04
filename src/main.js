@@ -22,7 +22,7 @@ if (isMobile) {
 }
 const app = createApp(App);
 
-const title = getLang()?.seo_title || "缔都化工";
+const title = getLang()?.seo_title || "Shaanxi Dideu Medichem Co.Ltd";
 document.title = title;
 app.use(i18n);
 app.use(ElementPlus, {

@@ -1,7 +1,7 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
 import { getLanguageListApi, getProductListApi, getProductApi, getOpenPageApi } from './apis/home'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { setLang, getLang } from './utils/local.js'
 import { ElMessage } from 'element-plus'
 const languageList = ref([])
@@ -111,8 +111,9 @@ async function getOpenPage() {
     return
   }
 }
-
-
+getOpenPage()
+const targetWebEn = ref('https://www.dideu.com/en/')
+const targetWebZh = ref('https://www.dideu.com/')
 </script>
 
 <template>
@@ -137,7 +138,8 @@ async function getOpenPage() {
           </template>
         </el-dropdown>
         <i class="fengexian">|</i>
-        <a class="web_link" href="https://www.dideu.com/" target="blank">{{ websiteLang }}</a>
+        <a class="web_link" :href="language === 'zh-CN' ? targetWebZh : targetWebEn" target="blank">{{ websiteLang
+          }}</a>
       </div>
     </section>
     <section class="dideu_home_search padBanxin">
@@ -184,7 +186,7 @@ async function getOpenPage() {
           <div class="product_item" v-for="(item, index) in productList" :key="index">
             <h5 class="item_title">{{ item.name }}</h5>
             <div class="classify">{{ item.class_name }}</div>
-            <p class="desc">{{ item.name_en }}</p>
+            <p class="desc" v-if="item.name_en">{{ item.name_en }}</p>
             <p class="cas">CAS: {{ item.cas }}</p>
           </div>
         </div>
@@ -446,6 +448,7 @@ async function getOpenPage() {
           }
 
           .desc {
+            margin-bottom: 20px;
             max-width: 300px;
             font-size: 14px;
             color: #666666;
@@ -454,7 +457,6 @@ async function getOpenPage() {
           }
 
           .cas {
-            margin-top: 20px;
             font-size: 16px;
             color: #000000;
             white-space: normal;
