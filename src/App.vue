@@ -1,7 +1,7 @@
 <script setup>
 import { Search } from '@element-plus/icons-vue'
 import { getLanguageListApi, getProductListApi, getProductApi, getOpenPageApi } from './apis/home'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { setLang, getLang } from './utils/local.js'
 import { ElMessage } from 'element-plus'
 const languageList = ref([])
@@ -12,10 +12,16 @@ async function getLanguageList() {
   console.log(res);
   if (res.code === 200) {
     languageList.value = res.data
+    const firstLang = localLang || languageList.value[0]//根据语言列表来获取第一个语言
+    console.log(firstLang);
+
+    if (firstLang) {
+      await changeLang(firstLang)
+    }
   } else {
     ElMessage.error(res.msg)
   }
-  await changeLang(localLang || languageList.value[0]) //根据语言列表来获取第一个语言
+
 }
 
 
@@ -105,7 +111,8 @@ async function getOpenPage() {
     return
   }
 }
-getOpenPage()
+
+
 </script>
 
 <template>
