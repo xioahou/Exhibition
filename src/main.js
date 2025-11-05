@@ -8,18 +8,7 @@ import i18n from "./locales/index.js";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import App from "./App.vue";
 import { getLang } from "./utils/local.js";
-const isMobile =
-  /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-const host = import.meta.env.VITE_API_BASE_URL;
-console.log(host);
 
-console.log(isMobile);
-if (isMobile) {
-  window.location.href = `${host}/mobile`;
-  // window.location.href = 'http://192.168.1.51:82/mobile'
-}
 const app = createApp(App);
 
 const title = getLang()?.seo_title || "Shaanxi Dideu Medichem Co.Ltd";
