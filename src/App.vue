@@ -139,7 +139,7 @@ const targetWebZh = ref('https://www.dideu.com/')
         </el-dropdown>
         <i class="fengexian">|</i>
         <a class="web_link" :href="language === 'zh-CN' ? targetWebZh : targetWebEn" target="blank">{{ websiteLang
-          }}</a>
+        }}</a>
       </div>
     </section>
     <section class="dideu_home_search padBanxin">
