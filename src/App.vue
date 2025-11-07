@@ -492,7 +492,7 @@ const targetWebZh = ref('https://www.dideu.com/')
           font-size: 12px;
 
           &.is-active {
-            background-color: #0D6CE4;
+            background-color: #004db5;
           }
         }
       }
