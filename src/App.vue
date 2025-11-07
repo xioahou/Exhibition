@@ -91,6 +91,12 @@ async function classisySearch(item) {
     ElMessage.error(res.msg)
   }
 }
+async function onClassClick(item) {
+  console.log('分类');
+
+  querParams.value.page = 1
+  await classisySearch(item)
+}
 classisySearch(querParams.value)
 function onSearchClick() {
   querParams.value.search = input.value
@@ -176,7 +182,7 @@ const targetWebZh = ref('https://www.dideu.com/')
         <div class="product_nav">
           <ul class="nav">
             <li :class="{ action: current_classify === item.id }" v-for="(item, index) in classifyList" :key="index"
-              @click="classisySearch(item)"><span class="text">{{ item.name
+              @click="onClassClick(item)"><span class="text">{{ item.name
               }}</span>
             </li>
 
@@ -192,7 +198,7 @@ const targetWebZh = ref('https://www.dideu.com/')
         </div>
       </div>
       <el-pagination background layout="prev, pager, next" :total="total" @size-change="handleSizeChange"
-        @current-change="handleCurrentChange" />
+        @current-change="handleCurrentChange" v-model:current-page="querParams.page" :page-size="querParams.limit" />
     </section>
     <section class="dideu_home_copyright">
       <div class="copyright_nav banxin">
