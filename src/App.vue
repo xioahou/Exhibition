@@ -189,12 +189,15 @@ const targetWebZh = ref('https://www.dideu.com/')
           </ul>
         </div>
         <div class="product_list">
-          <div class="product_item" v-for="(item, index) in productList" :key="index">
+          <div class="product_item" v-for="(item, index) in productList" :key="index" v-if="productList.length">
             <h5 class="item_title">{{ item.name }}</h5>
             <div class="classify">{{ item.class_name }}</div>
             <p class="desc" v-if="item.name_en">{{ item.name_en }}</p>
             <p class="cas">CAS: {{ item.cas }}</p>
           </div>
+          <el-empty v-else>
+            <template #description></template>
+          </el-empty>
         </div>
       </div>
       <el-pagination background layout="prev, pager, next" :total="total" @size-change="handleSizeChange"
@@ -411,6 +414,7 @@ const targetWebZh = ref('https://www.dideu.com/')
         gap: 10px;
         flex-wrap: wrap;
         flex-shrink: 0;
+        justify-content: center;
 
         .product_item {
           padding: 20px;
